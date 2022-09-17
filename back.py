@@ -2,19 +2,25 @@ import mysql.connector
 import datetime
 
 
-# CONEXÃO COM O BANCO DE DADOS
-cnx = mysql.connector.connect(
-    host='localhost',
-    database='db_vendas',
-    user='root',
-    password='Kal-El52$')
+def conexao():
+    c = mysql.connector.connect(
+        host='localhost',
+        database='db_vendas',
+        user='root',
+        password='admin')
 
-# INFORMAÇÃO SOBRE A CONEXÃO
-if cnx.is_connected():
-    info = cnx.get_server_info()
-    print(f"Conectado ao servidor MySQL versão {info}")
+    # INFORMAÇÃO SOBRE A CONEXÃO
+    if c.is_connected():
+        info = c.get_server_info()
+        print(f"Conectado ao servidor MySQL versão {info}")
 
-# CURSOR PARA REALIZAR AS OPERAÇÕES NO PYTHON
+    # CURSOR PARA REALIZAR AS OPERAÇÕES NO PYTHON
+    connect = c
+
+    return connect
+
+
+cnx = conexao()
 cursor = cnx.cursor()
 
 

@@ -1,4 +1,3 @@
-import mysql.connector
 import PySimpleGUI as sg
 import back
 from webbrowser import open
@@ -27,20 +26,11 @@ def front():
 
     # VERIFICAÇÃO LOGIN E SENHA
     while True:
-        # CONEXÃO COM O BANCO DE DADOS
-        cnx = mysql.connector.connect(
-            host='localhost',
-            database='db_vendas',
-            user='root',
-            password='Kal-El52$')
-
-        # INFORMAÇÃO SOBRE A CONEXÃO
-        if cnx.is_connected():
-            info = cnx.get_server_info()
-            print(f"Conectado ao servidor MySQL versão {info}")
-
-        # CURSOR PARA REALIZAR AS OPERAÇÕES NO PYTHON
+        # ATRIBUIÇÃO DA CONEXÃO COM A FUNÇÃO E DO CURSOR
+        cnx = back.conexao()
         cursor = cnx.cursor()
+
+        # RECEBIMENTO DOS EVENTOS E VALORES DA JANELA FRONT
         evento, valores = janela.read()
 
         if evento == sg.WINDOW_CLOSED:
