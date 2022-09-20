@@ -4,10 +4,10 @@ import datetime
 
 def conexao():
     c = mysql.connector.connect(
-        host='localhost',
+        host='',
         database='db_vendas',
-        user='root',
-        password='admin')
+        user='',
+        password='')
 
     # INFORMAÇÃO SOBRE A CONEXÃO
     if c.is_connected():
