@@ -2,11 +2,11 @@ import PySimpleGUI as sg
 import back
 from webbrowser import open
 
-gitLink = 'https://app.powerbi.com/view?r' \
-          '=eyJrIjoiNzc4MjFhOTYtOGI4OC00MDhhL' \
-          'ThkYWEtMDE5YTgyNzU3YzIyIiwidCI6ImZhNGNk' \
-          'YjlhLThkMDQtNDJmMy1iODMwLWU0N2I3YmFmMTdmZiIs' \
-          'ImMiOjF9&pageName=ReportSectiona39f44bfe132f21b7b7a '
+gitLink = 'https://app.powerbi.com/' \
+          'view?r=eyJrIjoiZDQ5M2RlMGQtMzZ' \
+          'jZi00Y2U2LWE0YWUtZTMwNmZkYjM0N2E' \
+          'zIiwidCI6ImZhNGNkYjlhLThkMDQtNDJmMy1i' \
+          'ODMwLWU0N2I3YmFmMTdmZiIsImMiOjF9'
 sg.theme('DarkBlue14')
 
 
@@ -59,7 +59,6 @@ def front():
                 else:
                     print("Senha Inválida!")
 
-
             cnx.commit()
             cnx.close()
 
@@ -72,7 +71,8 @@ def selecao():
         [sg.Text(' ')],
         [sg.Button('Vendas', size=(8, 3)), sg.Button('Produtos', size=(8, 3))],
         [sg.Text(' ')],
-        [sg.Text('Acessar Relatório', enable_events=True, key='Link'), sg.Text('|'), sg.Text('Finalizar Acesso', enable_events=True, key='Sair')],
+        [sg.Text('Acessar Relatório', enable_events=True, key='Link'), sg.Text('|'),
+         sg.Text('Finalizar Acesso', enable_events=True, key='Sair')],
     ]
 
     # ATRIBUIÇÃO DOS EVENTOS E VALORES
@@ -83,9 +83,6 @@ def selecao():
     while True:
 
         if evento_pag_2 == sg.WINDOW_CLOSED:
-            pagina_2.close()
-
-        if evento_pag_2 == 'Sair':
             pagina_2.close()
 
         if evento_pag_2 == 'Link':
@@ -101,16 +98,32 @@ def selecao():
             pagina_2.close()
             area_produtos()
 
+        if evento_pag_2 == 'Sair':
+            pagina_2.close()
+
 
 def area_vendas():
-    minhas_vendas = back.filtrar_venda(fun_cod)
+    minhas_vendas = list(back.filtrar_venda(fun_cod))
+    print(back.filtrar_venda(fun_cod))
+    cabecalho = ['Cód. Venda', 'Data da Venda', 'Total da Venda']
     area_venda = [
         [sg.Text('Minhas Vendas')],
-        [sg.Listbox(minhas_vendas, size=(50, 10), key='box')],
-        [sg.Text('')],
-        [sg.Button('Voltar', size=(14, 2)), sg.Button('Realizar Venda', size=(14, 2))]
+        [sg.Table(
+            values=minhas_vendas,
+            headings=cabecalho,
+            header_border_width=3,
+            header_text_color='#FFFFFF',
+            header_background_color='#3C3F41',
+            row_height=22,
+            alternating_row_color='#0765B6',
+            background_color='#283B5B',
+            num_rows=10,
+            key='minha_venda',
+            auto_size_columns=True,
+            justification='center')],
+        [sg.Button('Voltar', size=(20, 2)), sg.Button('Realizar Venda', size=(20, 2))]
     ]
-    pagina_3 = sg.Window('Área de Vendas', area_venda, size=(276, 310))
+    pagina_3 = sg.Window('Área de Vendas', area_venda, element_justification='center')
     evento_pag_3, valor_pag_3 = pagina_3.read()
 
     while True:
@@ -128,16 +141,26 @@ def area_vendas():
 
 
 def area_produtos():
-    lista_produtos = back.consultar_produtos()
-    # print(f"{lista_produtos[0][0]} | {lista_produtos[0][1]} | R$ {lista_produtos[0][2]} | N° {lista_produtos[0][3]}")
-    # print(type(lista_produtos))
-
+    lista_produtos = list(back.consultar_produtos())
+    cabecalho = ['Cód. Produto', 'Item', 'Valor', 'Estoque']
     area_produto = [
         [sg.Text('Lista de Produtos')],
-        [sg.Listbox(lista_produtos, size=(100, 10), key='box')],
-        [sg.Button('Voltar', size=(16, 2)), sg.Button('Cadastrar Produtos', size=(16, 2))]
+        [sg.Table(
+            values=lista_produtos,
+            headings=cabecalho,
+            header_border_width=3,
+            header_text_color='#FFFFFF',
+            header_background_color='#3C3F41',
+            row_height=22,
+            alternating_row_color='#0765B6',
+            background_color='#283B5B',
+            num_rows=10,
+            key='box',
+            auto_size_columns=True,
+            justification='center')],
+        [sg.Button('Voltar', size=(20, 2)), sg.Button('Cadastrar Produtos', size=(20, 2))]
     ]
-    pagina_4 = sg.Window('Área dos Produtos', area_produto, size=(380, 260), element_justification='center')
+    pagina_4 = sg.Window('Área dos Produtos', area_produto, element_justification='center')
     evento_pag_4, valor_pag_4 = pagina_4.read()
 
     while True:
@@ -155,18 +178,35 @@ def area_produtos():
 
 def realizar_venda():
     lista_produtos = back.consultar_produtos()
+    print(lista_produtos[0][0])
+    cabecalho = ['Cód. Produto', 'Item', 'Valor', 'Estoque']
     inicial = 1
 
     venda = [
         [sg.Text('Selecione o Produto')],
-        [sg.Listbox(lista_produtos, size=(40, 10), key='produto_selecionado')],
+        [sg.Table(
+            values=lista_produtos,
+            headings=cabecalho,
+            header_border_width=3,
+            header_text_color='#FFFFFF',
+            header_background_color='#3C3F41',
+            row_height=22,
+            alternating_row_color='#0765B6',
+            background_color='#283B5B',
+            num_rows=10,
+            key='produto_selecionado',
+            auto_size_columns=True,
+            justification='center')],
         [sg.Text('Quantidade '), sg.Input(f'{inicial}', size=(4, 2), key='quantidade')],
         [sg.Text('')],
-        [sg.Button('Cancelar', size=(14, 2)), sg.Button('Realizar Venda', size=(14, 2))]
+        [sg.Button('Cancelar', size=(20, 2)), sg.Button('Realizar Venda', size=(20, 2))]
     ]
 
     pagina_venda = sg.Window('Realizar Venda', venda, element_justification='center')
     evento_pag_venda, valor_pag_venda = pagina_venda.read()
+
+    linha = valor_pag_venda['produto_selecionado'][0]
+    print(lista_produtos[linha][0])
 
     while True:
 
@@ -175,10 +215,9 @@ def realizar_venda():
             area_vendas()
 
         if evento_pag_venda == 'Realizar Venda':
-
             data_venda = back.data_atual()
             funcionario_venda = fun_cod
-            produto = valor_pag_venda['produto_selecionado'][0][0]
+            produto = lista_produtos[linha][0]
             quantidade = int(valor_pag_venda['quantidade'])
             print('__________________')
             print(type(data_venda))
@@ -198,15 +237,20 @@ def realizar_venda():
 
 
 def cadastro_produtos():
-
     cadastro_produto = [
         [sg.Text('')],
-        [sg.Text('Item                   '), sg.InputText('', size=(50, 3), key='prod_nome')],
-        [sg.Text('Marca                '), sg.InputText('', size=(50, 3), key='prod_marca')],
-        [sg.Text('Tipo                   '), sg.InputText('', size=(50, 3), key='prod_tipo')],
-        [sg.Text('Preço de Custo  '), sg.InputText('', size=(10, 3), key='prod_custo')],
-        [sg.Text('Preço de Venda '), sg.InputText('', size=(10, 3), key='prod_venda')],
-        [sg.Text('Quantidade        '), sg.InputText('', size=(10, 3), key='prod_quantidade')],
+        [sg.Text('Item')],
+        [sg.InputText('', size=(50, 3), key='prod_nome')],
+        [sg.Text('Marca')],
+        [sg.InputText('', size=(50, 3), key='prod_marca')],
+        [sg.Text('Tipo')],
+        [sg.InputText('', size=(50, 3), key='prod_tipo')],
+        [sg.Text('Preço de Custo')],
+        [sg.InputText('', size=(15, 3), key='prod_custo')],
+        [sg.Text('Preço de Venda')],
+        [sg.InputText('', size=(15, 3), key='prod_venda')],
+        [sg.Text('Quantidade')],
+        [sg.InputText('', size=(15, 3), key='prod_quantidade')],
         [sg.Text('')],
         [sg.Button('Cancelar', size=(14, 2)), sg.Button('Cadastrar', size=(14, 2))]
     ]

@@ -53,12 +53,13 @@ def realizar_venda(data, funcionario, produto, quantidade):
     # REALIZAR TODAS OPERAÇÕES NO BANCO DE DADOS
     cnx.commit()
 
+
 # TESTE PARA REALIZAR VENDA
-    # realizar_venda('13/09/2022', 20220902, 780, 1)
+# realizar_venda('13/09/2022', 20220902, 780, 1)
 
 
 def filtrar_venda(funcionario):
-    minhas_vendas = cursor.execute(f"select ven_data, "
+    minhas_vendas = cursor.execute(f"select ven_cod, ven_data, "
                                    f"ven_total from venda "
                                    f"where ven_cod_fun = {funcionario}")
     minhas_vendas = cursor.fetchall()
@@ -70,12 +71,13 @@ def filtrar_venda(funcionario):
 
     return minhas_vendas
 
+
 # TESTE VENDA FILTRADA
-    # filtrar_venda(20220902)
+# filtrar_venda(20220902)
 
 
 def consultar_produtos():
-    produtos = cursor.execute("select prod_cod, prod_item, prod_venda from produto where prod_estoque > 0")
+    produtos = cursor.execute("select prod_cod, prod_item, prod_venda, prod_estoque from produto where prod_estoque > 0")
     produtos = cursor.fetchall()
 
     for dados_produto in produtos:
@@ -83,8 +85,9 @@ def consultar_produtos():
     cnx.commit()
     return produtos
 
+
 # TESTE PARA CONSULTAR PRODUTOS
-    # consultar_produtos()
+# consultar_produtos()
 
 
 def cadastrar_produtos(item, marca, custo, venda, tipo, estoque):
